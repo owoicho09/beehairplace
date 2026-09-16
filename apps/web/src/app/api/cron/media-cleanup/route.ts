@@ -7,11 +7,13 @@ import { getMediaStorage } from "@/lib/media/storage";
 
 /**
  * Sweeps soft-deleted product_media rows and removes their underlying
- * storage objects, retrying any that failed on a previous run. Call this
- * on a schedule (e.g. a daily Vercel Cron hitting this route) rather than
- * deleting storage synchronously from user-facing requests.
+ * storage objects, retrying any that failed on a previous run. Triggered by
+ * the Vercel Cron entry in vercel.json (see cron-jobs docs: Vercel always
+ * invokes cron paths with GET, and auto-attaches
+ * `Authorization: Bearer $CRON_SECRET` when a project env var of that exact
+ * name is set — https://vercel.com/docs/cron-jobs/manage-cron-jobs).
  */
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   const secret = request.headers.get("authorization")?.replace("Bearer ", "");
   if (!secret || secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

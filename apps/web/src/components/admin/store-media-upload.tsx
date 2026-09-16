@@ -7,10 +7,12 @@ import { confirmStoreMediaUploaded, requestStoreMediaUpload } from "@/lib/admin/
 import { getSupabaseBrowserClient } from "@/lib/media/browser-client";
 
 export function StoreMediaUpload({
+  target,
   label,
   currentPosterUrl,
   currentStatus,
 }: {
+  target: "hero" | "store";
   label: string;
   currentPosterUrl: string | null;
   currentStatus: string | null;
@@ -23,6 +25,7 @@ export function StoreMediaUpload({
     try {
       const extension = file.name.split(".").pop() || "mp4";
       const { mediaId, token, rawPath, bucket } = await requestStoreMediaUpload({
+        target,
         fileExtension: extension,
       });
 
@@ -30,7 +33,7 @@ export function StoreMediaUpload({
       const { error } = await supabase.storage.from(bucket).uploadToSignedUrl(rawPath, token, file);
       if (error) throw error;
 
-      await confirmStoreMediaUploaded(mediaId);
+      await confirmStoreMediaUploaded(mediaId, target);
       router.refresh();
     } catch (error) {
       console.error("Upload failed", error);

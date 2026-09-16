@@ -19,10 +19,13 @@ async function ensureSettingsRow() {
     .onConflictDoNothing({ target: storeSettings.id });
 }
 
-export async function requestStoreMediaUpload(params: { fileExtension: string }) {
+export async function requestStoreMediaUpload(params: {
+  target: "hero" | "store";
+  fileExtension: string;
+}) {
   await requireAdmin();
   const storage = getMediaStorage();
-  const rawPath = `store/hero/${randomUUID()}.${params.fileExtension}`;
+  const rawPath = `store/${params.target}/${randomUUID()}.${params.fileExtension}`;
 
   const [media] = await db
     .insert(productMedia)
@@ -45,7 +48,7 @@ export async function requestStoreMediaUpload(params: { fileExtension: string })
   };
 }
 
-export async function confirmStoreMediaUploaded(mediaId: string) {
+export async function confirmStoreMediaUploaded(mediaId: string, target: "hero" | "store") {
   await requireAdmin();
   await ensureSettingsRow();
 
@@ -53,11 +56,11 @@ export async function confirmStoreMediaUploaded(mediaId: string) {
   if (!media) throw new Error("Media not found");
 
   const current = await db.query.storeSettings.findFirst({ where: eq(storeSettings.id, 1) });
-  const previousMediaId = current?.heroMediaId;
+  const previousMediaId = target === "hero" ? current?.heroMediaId : current?.storeVideoMediaId;
 
   await db
     .update(storeSettings)
-    .set({ heroMediaId: mediaId })
+    .set(target === "hero" ? { heroMediaId: mediaId } : { storeVideoMediaId: mediaId })
     .where(eq(storeSettings.id, 1));
 
   if (previousMediaId && previousMediaId !== mediaId) {

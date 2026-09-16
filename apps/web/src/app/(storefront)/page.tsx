@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { FeaturedSection } from "@/components/storefront/featured-section";
 import { HeroSection } from "@/components/storefront/hero-section";
 import { StoreSection } from "@/components/storefront/store-section";
@@ -54,19 +52,12 @@ export default async function HomePage() {
       />
 
       <StoreSection
+        videoUrl={settings?.storeVideoMedia?.processedUrl ?? null}
+        posterUrl={settings?.storeVideoMedia?.posterUrl ?? null}
         address={settings?.address ?? null}
         openingHours={settings?.openingHours ?? null}
+        whatsappNumber={settings?.whatsappNumber ?? null}
       />
-
-      <section className="mx-auto max-w-6xl px-4 py-14 text-center">
-        <h2 className="font-editorial text-2xl">Shop the collection.</h2>
-        <Link
-          href="/shop"
-          className="mt-5 inline-flex items-center bg-ink px-8 py-3 text-sm font-medium text-ivory transition-colors hover:bg-ink-soft"
-        >
-          Shop now
-        </Link>
-      </section>
     </>
   );
 }

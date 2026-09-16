@@ -102,42 +102,62 @@ function toCatalogCard(
   };
 }
 
+// getFeaturedProducts, getBestSellers, getStoreSettings and
+// getDeliverySettings all run during static generation of "/", "/cart" and
+// "/checkout" (next build prerenders any route that doesn't opt out of
+// static rendering, which executes their Server Component tree, including
+// these DB calls, once at build time). An unguarded throw here — e.g. from
+// a misconfigured DATABASE_URL or a transient connection failure — fails
+// that page's prerender and takes down the entire `next build`, not just a
+// single request. Each is wrapped to degrade to an empty/null result
+// instead, exactly like an ordinary "nothing configured yet" state.
+
 export async function getFeaturedProducts() {
-  const rows = await db.query.products.findMany({
-    where: and(publishedProduct, eq(products.isFeatured, true)),
-    orderBy: [asc(products.sortOrder)],
-    limit: 3,
-    with: {
-      media: {
-        where: (m, { and, eq, isNull }) =>
-          and(eq(m.role, "primary"), isNull(m.deletedAt)),
+  try {
+    const rows = await db.query.products.findMany({
+      where: and(publishedProduct, eq(products.isFeatured, true)),
+      orderBy: [asc(products.sortOrder)],
+      limit: 3,
+      with: {
+        media: {
+          where: (m, { and, eq, isNull }) =>
+            and(eq(m.role, "primary"), isNull(m.deletedAt)),
+        },
+        variants: true,
       },
-      variants: true,
-    },
-  });
-  return rows.map((product) => ({
-    ...toCatalogCard(product),
-    videoUrl:
-      product.media.find((m) => m.kind === "video" && m.status === "ready")
-        ?.processedUrl ?? null,
-  }));
+    });
+    return rows.map((product) => ({
+      ...toCatalogCard(product),
+      videoUrl:
+        product.media.find((m) => m.kind === "video" && m.status === "ready")
+          ?.processedUrl ?? null,
+    }));
+  } catch (error) {
+    console.error("getFeaturedProducts failed, degrading gracefully", error);
+    return [];
+  }
 }
 
 export async function getBestSellers() {
-  const rows = await db.query.products.findMany({
-    where: and(publishedProduct, eq(products.isBestSeller, true)),
-    orderBy: [asc(products.sortOrder)],
-    // Matches the 3-up homepage row (alongside the 3 featured products).
-    limit: 3,
-    with: {
-      media: {
-        where: (m, { and, eq, isNull }) =>
-          and(eq(m.role, "primary"), isNull(m.deletedAt)),
+  try {
+    const rows = await db.query.products.findMany({
+      where: and(publishedProduct, eq(products.isBestSeller, true)),
+      orderBy: [asc(products.sortOrder)],
+      // Matches the 3-up homepage row (alongside the 3 featured products).
+      limit: 3,
+      with: {
+        media: {
+          where: (m, { and, eq, isNull }) =>
+            and(eq(m.role, "primary"), isNull(m.deletedAt)),
+        },
+        variants: true,
       },
-      variants: true,
-    },
-  });
-  return rows.map(toCatalogCard);
+    });
+    return rows.map(toCatalogCard);
+  } catch (error) {
+    console.error("getBestSellers failed, degrading gracefully", error);
+    return [];
+  }
 }
 
 export async function getProductBySlug(slug: string) {
@@ -194,26 +214,37 @@ const getCachedStoreSettings = unstable_cache(
     });
     if (!settings) return null;
 
-    // Only the hero video is looked up: the storefront no longer renders a
-    // store video anywhere, so fetching it would be wasted work on every
-    // page render. (The store_video_media_id column is left in place,
-    // unread, rather than requiring a migration to drop it.)
-    const heroMedia = settings.heroMediaId
-      ? await db.query.productMedia.findFirst({ where: eq(productMedia.id, settings.heroMediaId) })
-      : null;
+    const [heroMedia, storeVideoMedia] = await Promise.all([
+      settings.heroMediaId
+        ? db.query.productMedia.findFirst({ where: eq(productMedia.id, settings.heroMediaId) })
+        : null,
+      settings.storeVideoMediaId
+        ? db.query.productMedia.findFirst({ where: eq(productMedia.id, settings.storeVideoMediaId) })
+        : null,
+    ]);
 
-    return { ...settings, heroMedia: heroMedia ?? null };
+    return { ...settings, heroMedia: heroMedia ?? null, storeVideoMedia: storeVideoMedia ?? null };
   },
   ["store-settings"],
   { tags: ["store-settings"], revalidate: 60 },
 );
 
 export async function getStoreSettings() {
-  return getCachedStoreSettings();
+  try {
+    return await getCachedStoreSettings();
+  } catch (error) {
+    console.error("getStoreSettings failed, degrading gracefully", error);
+    return null;
+  }
 }
 
 export async function getDeliverySettings() {
-  return db.query.deliverySettings.findFirst({
-    where: eq(deliverySettings.id, 1),
-  });
+  try {
+    return await db.query.deliverySettings.findFirst({
+      where: eq(deliverySettings.id, 1),
+    });
+  } catch (error) {
+    console.error("getDeliverySettings failed, degrading gracefully", error);
+    return null;
+  }
 }

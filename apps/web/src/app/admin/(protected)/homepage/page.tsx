@@ -14,9 +14,17 @@ export default async function AdminHomepagePage() {
       <h1 className="font-editorial text-2xl">Homepage</h1>
 
       <StoreMediaUpload
+        target="hero"
         label="Hero video"
         currentPosterUrl={settings?.heroMedia?.posterUrl ?? null}
         currentStatus={settings?.heroMedia?.status ?? null}
+      />
+
+      <StoreMediaUpload
+        target="store"
+        label="Physical store video"
+        currentPosterUrl={settings?.storeVideoMedia?.posterUrl ?? null}
+        currentStatus={settings?.storeVideoMedia?.status ?? null}
       />
 
       <div>
