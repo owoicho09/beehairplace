@@ -1,0 +1,507 @@
+I want to build a production-quality, mobile-first e-commerce website for a Nigerian hair vendor called Bee Hairplace.
+
+Do not start coding yet.
+
+Your first task is to deeply reason through the product, architecture, UX and implementation plan based on the context below.
+
+I have already spent time thinking through the product and making important product decisions, but I do NOT want you to blindly translate this into code or treat every detail as a rigid technical instruction.
+
+Understand what we are trying to achieve, challenge weak implementation assumptions where necessary, identify technical risks, and propose the cleanest practical architecture for the MVP.
+
+The eventual goal is to build the complete application after we agree on the plan.
+
+PRODUCT
+
+Bee Hairplace is a personal-brand hair business in Abuja, Nigeria.
+
+The owner, Bee, models/wears the wigs herself in short portrait videos. This is already how her audience experiences and discovers her products on social media.
+
+The website should turn that existing behavior into a proper e-commerce experience.
+
+The defining idea is:
+
+This is a video-first hair store where Bee herself is the visual catalogue.
+
+It should NOT feel like a generic Shopify-style hair store filled with static product cards.
+
+At the same time, it must be fast, especially on mobile. We specifically do not want a page trying to autoplay 30–50+ product videos.
+
+Most customers will visit from mobile devices.
+
+CUSTOMER EXPERIENCE
+
+There is no customer registration or customer account system.
+
+A customer should simply:
+
+browse → find a hair → open it → select their option/length → buy → enter checkout details → pay → receive confirmation.
+
+Do not introduce authentication or account creation into the customer journey.
+
+HOMEPAGE
+
+The homepage should feel like Bee's digital showroom rather than a generic e-commerce template.
+
+The hero should use a strong video of Bee as the background.
+
+Hero video behavior:
+- autoplay
+- muted
+- looping
+- inline
+- no visible video controls
+
+The page should visually prioritize Bee, the hair and movement over excessive copy.
+
+Likely homepage content includes:
+
+- minimal navigation
+- video hero
+- shop/category discovery
+- a very small featured/new-hair section
+- personal-brand/editorial section around Bee
+- best sellers or another curated product section
+- physical Abuja store section
+- social proof/customer content if real content is available
+- basic delivery/payment reassurance
+- final shopping CTA
+- footer
+
+Do not blindly create sections just because e-commerce templates normally have them.
+
+Avoid generic "Why Choose Us" icon sections, fake statistics, fake testimonials, huge About Us sections, excessive FAQ content, generic marketing copy and unnecessary UI.
+
+FEATURED VIDEOS
+
+The homepage may have approximately 3 featured product videos.
+
+These can autoplay muted and loop because there are very few of them and they are intentionally being used to establish the visual identity of the store.
+
+Do not extend this behavior to the full catalogue.
+
+CATALOGUE / SHOP
+
+The shop should be optimized for extremely fast visual browsing.
+
+On mobile, use a dense 3-column portrait grid inspired by the browsing density of a TikTok profile grid, but do not clone TikTok's UI.
+
+Each product card should show only:
+
+- product visual/poster
+- product name
+- price / starting price
+
+Nothing else.
+
+All additional information belongs on the product detail page.
+
+The catalogue should NOT autoplay every product video.
+
+There could eventually be 30–50 products and later significantly more.
+
+Instead, products should have lightweight poster images automatically generated from their uploaded videos.
+
+The vendor should NOT have to upload thumbnails manually.
+
+The catalogue therefore behaves primarily like an optimized image grid.
+
+A subtle indicator can communicate that the product contains video.
+
+Tapping the product opens its detail page.
+
+Search and filtering must actually work.
+
+Categories are dynamic and admin-managed rather than hardcoded.
+
+Filtering should be designed appropriately for mobile rather than squeezing a desktop filter sidebar onto the screen.
+
+VIDEO / MEDIA
+
+Video is the primary product media.
+
+A product video is required.
+
+Additional product photos are optional.
+
+The admin should only need to upload the source video.
+
+The system should take responsibility for creating whatever optimized media it needs, including an automatically generated catalogue poster/thumbnail.
+
+Think carefully about how video processing should work.
+
+We care about:
+
+- mobile performance
+- bandwidth
+- storage
+- maintaining enough video quality to properly see hair texture and movement
+- automatic poster generation
+- not loading video unnecessarily
+- avoiding huge raw phone-video files being served directly
+- graceful processing failures
+- cleaning up replaced/deleted media
+- keeping the media architecture replaceable if storage requirements grow later
+
+Do not assume a particular processing implementation simply because I mentioned these requirements.
+
+Reason about the simplest reliable MVP implementation.
+
+We are likely to start with Supabase for Postgres and possibly Supabase Storage.
+
+However, do not tightly couple the entire application to one storage provider if a small abstraction makes future migration straightforward.
+
+We expect the store to start relatively small but it could eventually reach 100–200+ products.
+
+PRODUCT DETAIL
+
+Opening a product should move from fast catalogue browsing into a richer product experience.
+
+The product video should dominate the product detail page.
+
+Unlike catalogue/homepage autoplay videos, this is a proper video player.
+
+It should support:
+- sound
+- play/pause
+- seeking/rewinding
+- mute/unmute
+- fullscreen where supported
+
+Do not force autoplay with sound.
+
+Product information can include:
+
+- name
+- price
+- available lengths/options
+- description
+- availability
+- optional supporting photos
+
+The important purchase controls should appear before long descriptive content.
+
+A product can have different prices for different lengths.
+
+The admin must not be restricted to predefined length checkboxes.
+
+She should be able to enter the lengths/options herself.
+
+Some products may not require length variants at all, so design the data model sensibly rather than forcing every product into the exact same variant structure.
+
+The page should support Buy Now and Add to Bag.
+
+RELATED PRODUCTS
+
+At the bottom of the product page, recommend other relevant hairs.
+
+On mobile these should be a horizontal swipeable row/carousel rather than another long vertical product grid.
+
+Related cards should retain the same visual language:
+poster + name + price.
+
+They do not need to autoplay.
+
+CART
+
+Keep the cart simple.
+
+Use generated product posters rather than loading videos.
+
+Customers should be able to:
+- review products
+- see selected length/variant
+- change quantity
+- remove items
+- see subtotal
+- proceed to checkout
+
+CHECKOUT
+
+No authentication.
+
+Collect only the information required to fulfil the order, such as:
+
+- full name
+- email
+- phone/WhatsApp number
+- fulfilment method
+- delivery information when applicable
+
+There are two fulfilment methods:
+
+1. Delivery
+2. Pickup from the physical Abuja store
+
+If pickup is selected, unnecessary delivery address fields should disappear.
+
+Delivery pricing/rules should be configurable from admin rather than hardcoded into the storefront.
+
+PAYMENTS
+
+Payments will use Paystack.
+
+Think through this securely.
+
+Do not trust frontend payment state.
+
+Orders/payment initialization and verification should be handled appropriately server-side, including Paystack webhook verification.
+
+The application should distinguish payment status from fulfilment/order status.
+
+Do not implement transaction splitting or platform commissions at this stage.
+
+After successful payment, show a proper order confirmation page with an order reference and summary.
+
+WhatsApp can be used as an additional support/communication channel after purchase.
+
+ADMIN
+
+There is only one store administrator for the MVP.
+
+We do NOT need:
+- admin registration
+- multiple organizations
+- staff invitations
+- roles/permissions
+- complex account management
+
+However, admin credentials must not be exposed in frontend source code.
+
+Design the simplest secure server-side admin session/login appropriate for this architecture.
+
+The admin itself must work well on mobile because Bee may manage products directly from her phone.
+
+The main admin areas should conceptually cover:
+
+- overview
+- products
+- categories
+- orders
+- homepage merchandising/content
+- delivery configuration
+- basic store settings
+
+Do not create an unnecessarily complex analytics dashboard.
+
+PRODUCT MANAGEMENT
+
+Adding a product should be very simple.
+
+The admin should be able to provide:
+
+- name
+- category
+- required video
+- optional photos
+- optional description
+- base price or length/variant pricing
+- availability
+- publishing/display settings
+
+The system should handle media optimization/poster generation behind the scenes.
+
+The UI should communicate media processing states clearly.
+
+Categories should be manageable by the admin.
+
+The admin should be able to create a new category while adding/editing a product, and that category should then become available throughout the store and filters.
+
+Useful product actions can include things such as edit, duplicate, publish/unpublish, availability and delete/archive.
+
+Think carefully about deletion because historical orders must remain meaningful even if a product is later renamed or removed.
+
+Orders should preserve/snapshot the important purchased information rather than depending entirely on the current product record.
+
+HOMEPAGE MANAGEMENT
+
+Bee should be able to manage the business content that naturally changes, without being able to accidentally redesign the website.
+
+For example, she may need control over:
+
+- hero video
+- featured products
+- best sellers
+- store video
+- relevant store/contact information
+
+The featured autoplay product section should remain intentionally small (around three products).
+
+The admin controls content and commerce, not fonts, colors, layout systems or arbitrary design configuration.
+
+ORDERS
+
+The admin should be able to search and manage orders.
+
+Keep payment status separate from order/fulfilment status.
+
+Useful fulfilment states may include concepts such as:
+- processing
+- ready for pickup
+- out for delivery
+- completed
+- cancelled
+
+Do not blindly use these exact values if you identify a cleaner state model.
+
+VISUAL DIRECTION
+
+The storefront should feel like:
+
+premium fashion editorial × modern social commerce.
+
+It should NOT look like:
+- generic Shopify theme
+- generic AI-generated website
+- SaaS dashboard
+- black-and-gold "luxury" cliché
+- gradient-heavy landing page
+
+The UI should deliberately get out of the way of Bee and the hair.
+
+Explore a restrained warm-neutral palette:
+- warm ivory/off-white backgrounds
+- near-black text/actions
+- subtle warm greys
+- possibly a restrained burgundy/brown brand accent
+
+The hair and videos should provide most of the color.
+
+Typography can combine:
+- an elegant editorial serif for selective brand statements/headlines
+- a highly readable modern sans-serif for commerce/UI
+
+Do not overuse the serif.
+
+Product catalogue:
+- dense
+- clean
+- minimal gaps
+- portrait imagery
+- no unnecessary borders
+- no giant rounded cards
+- no heavy shadows
+- name + price only
+
+Avoid excessive animations.
+
+The videos themselves already provide movement.
+
+Use animation only where it improves interaction: drawers, sheets, transitions, cart feedback, etc.
+
+PHYSICAL STORE
+
+Bee Hairplace has a physical store in Abuja.
+
+The homepage should include a credibility section featuring a video of the actual store.
+
+The store video can autoplay muted/looped without controls when the section approaches the viewport.
+
+Store address/contact/opening-hour information should come from store settings rather than being duplicated throughout source code.
+
+WHATSAPP
+
+WhatsApp is important for customers who need reassurance/questions before purchasing.
+
+Integrate it tastefully.
+
+It should complement checkout rather than replacing the e-commerce experience.
+
+Do not allow a giant floating button to constantly obstruct products on small screens.
+
+TECHNICAL DIRECTION
+
+I plan to use a modern Next.js application.
+
+Supabase is likely for Postgres and may initially handle media storage.
+
+Paystack handles payment.
+
+I want the application to be deployable using practical low-cost infrastructure appropriate for an MVP.
+
+Environment-specific credentials must be stored through environment variables.
+
+Do not expose service credentials/secrets to the browser.
+
+We want clean separation between:
+- storefront
+- admin
+- database/business logic
+- media handling
+- payments
+
+But do not over-engineer this into microservices unless there is an actual reason.
+
+The site must be responsive, accessible and particularly good on mobile.
+
+PERFORMANCE IS A PRODUCT REQUIREMENT
+
+Do not treat performance as something to fix after building.
+
+Think about:
+
+- what loads above the fold
+- lazy loading
+- generated posters
+- video preload behavior
+- media compression
+- caching
+- responsive images
+- database query patterns
+- catalogue pagination/loading strategy
+- search/filter behavior
+- bandwidth
+- Core Web Vitals
+- slower Nigerian/mobile network conditions
+
+The hero video should receive priority over video much further down the homepage.
+
+A store video near the bottom should not compete with the hero during initial page load.
+
+Likewise, the catalogue should not download dozens of videos merely because their posters are visible.
+
+IMPORTANT WORKING STYLE
+
+Do not start coding.
+
+First inspect the existing repository if there is one.
+
+Then reason about this product as a senior full-stack/product engineer.
+
+I want you to return a proposed implementation plan covering at minimum:
+
+1. Your understanding of the product and key UX principles.
+2. Recommended architecture.
+3. Recommended stack and why.
+4. Database/data model.
+5. Product/variant modelling.
+6. Media/video upload, processing, poster generation and storage strategy.
+7. Storefront route/page structure.
+8. Admin route/page structure.
+9. Cart and guest checkout architecture.
+10. Paystack payment flow and webhook verification.
+11. Order/payment/fulfilment state model.
+12. Search/filter strategy.
+13. Performance strategy, especially video performance on mobile.
+14. Admin authentication approach.
+15. Media lifecycle/cleanup.
+16. Error handling and important edge cases.
+17. Security considerations.
+18. Deployment approach.
+19. What belongs in the MVP versus what should deliberately wait.
+20. Any assumptions, weaknesses or product/technical decisions you think we should reconsider before implementation.
+
+Do not add features merely because they are common in e-commerce systems.
+
+Do not turn this into an enterprise platform.
+
+Do not code until the plan has been reviewed.
+
+Be opinionated where there is a real technical reason, but preserve the core product idea:
+
+finish the build and add every env var to the .env file i will fill it after build is complete
+
+Bee herself is the catalogue.
+Video makes the store distinctive.
+Browsing must remain fast.
+Buying must remain simple.
+The admin must remain easy enough to operate from a phone.

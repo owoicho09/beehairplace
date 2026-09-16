@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --color-ivory: #f7f3ec;
+  --color-ivory-dim: #efe9de;
+  --color-ink: #1c1815;
+  --color-ink-soft: #4a443e;
+  --color-warm-grey: #8a8078;
+  --color-warm-grey-light: #e4dccf;
+  --color-line: #e1d8c9;
+  --color-burgundy: #6b2737;
+  --color-burgundy-dark: #521d2a;
+}
+
+@theme inline {
+  --color-ivory: var(--color-ivory);
+  --color-ivory-dim: var(--color-ivory-dim);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-warm-grey: var(--color-warm-grey);
+  --color-warm-grey-light: var(--color-warm-grey-light);
+  --color-line: var(--color-line);
+  --color-burgundy: var(--color-burgundy);
+  --color-burgundy-dark: var(--color-burgundy-dark);
+  --font-sans: var(--font-ui);
+  --font-editorial: var(--font-editorial);
+}
+
+body {
+  background: var(--color-ivory);
+  color: var(--color-ink);
+}
+
+.font-editorial {
+  font-family: var(--font-editorial);
+}
+
+/* Hide scrollbar on horizontal swipe rows while keeping them scrollable */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,605 @@
+We are NOT moving on to page copy yet.
+
+The current application is substantially built, but it now needs a serious end-to-end QA, debugging, performance and reliability pass before we consider the MVP actually working.
+
+Do NOT just add more features.
+
+Your job now is to inspect the application as a senior full-stack engineer, reproduce problems, identify root causes, fix them, and verify the fixes.
+
+The goal is:
+
+EVERY EXISTING FEATURE SHOULD ACTUALLY WORK AS INTENDED.
+
+Do not assume something works because the code for it exists.
+
+Test the real behavior.
+
+IMPORTANT CONTEXT
+
+I have already tested the application manually.
+
+The media upload pipeline is partially working:
+
+- Videos are successfully reaching the Supabase storage bucket.
+- Generated posters/screenshots are also appearing in the bucket.
+- However, the UI experience is much slower than it should be.
+- Uploading/processing hero videos and product videos takes a long time from the user's perspective.
+- The database/storage state sometimes appears correct even while the UI has not updated or feels stuck.
+
+There are also functional problems:
+
+- Product upload/create is currently not reliably working.
+- Product filtering is not working correctly.
+- Selecting Featured while creating a product does not appear to make the product show in the Featured section.
+- There are likely other small inconsistencies and bugs that haven't been discovered yet.
+
+I do NOT want you to patch only these three visible problems.
+
+I want a complete audit of the application and all existing flows.
+
+DO NOT START BY REWRITING THE APPLICATION.
+
+First inspect the existing implementation and understand how everything currently works.
+
+==================================================
+PHASE 1 — FULL APPLICATION AUDIT
+==================================================
+
+Inspect:
+
+- apps/web
+- apps/media-worker
+- database schema/migrations
+- API/server routes
+- Supabase integration
+- storage configuration
+- media processing
+- frontend data fetching
+- caching/revalidation
+- admin authentication/session
+- product CRUD
+- category CRUD
+- variants
+- homepage merchandising
+- search
+- filtering
+- catalogue pagination/infinite scrolling
+- product detail
+- cart
+- checkout
+- Paystack integration
+- webhook handling
+- order creation
+- order status
+- delivery settings
+- store settings
+- error handling
+
+Understand the actual data flow between frontend, backend, Supabase and media worker.
+
+Do not make assumptions from filenames alone.
+
+==================================================
+PHASE 2 — REPRODUCE THE BUGS
+==================================================
+
+Actually run the application and reproduce the known problems.
+
+At minimum test:
+
+1. Create a new product from admin.
+2. Upload a real product video.
+3. Wait for media processing.
+4. Confirm the database record.
+5. Confirm the video exists in storage.
+6. Confirm the generated poster exists.
+7. Confirm the product becomes visible in admin.
+8. Confirm the product appears in the storefront when published.
+9. Confirm the product poster loads.
+10. Open the product detail page.
+11. Confirm the actual video loads and plays.
+12. Test the Featured checkbox/selection.
+13. Confirm the product appears in the homepage Featured section.
+14. Edit the product.
+15. Change its category.
+16. Change price/variant.
+17. Change availability.
+18. Unpublish it.
+19. Republish it.
+20. Delete/archive it.
+21. Confirm historical references are not broken.
+
+Then test catalogue:
+
+- search
+- category filter
+- multiple filters if supported
+- clearing filters
+- changing filters
+- pagination/infinite scroll
+- empty results
+- returning to all products
+
+Then test:
+
+- product detail
+- related products
+- add to cart
+- remove from cart
+- quantity changes
+- Buy Now
+- checkout
+- delivery
+- pickup
+- validation
+- order creation
+
+Then test the admin order flow.
+
+Then test homepage merchandising.
+
+Do not stop when you find the first bug.
+
+==================================================
+PHASE 3 — INVESTIGATE VIDEO/MEDIA PERFORMANCE
+==================================================
+
+This is especially important.
+
+The user experience currently feels slow even though the uploaded video and generated poster already exist in Supabase.
+
+Do NOT simply say:
+
+"Supabase is slow."
+
+Measure the actual pipeline.
+
+For a representative product upload, determine approximately how long each stage takes:
+
+A. Browser → storage upload
+
+B. Storage upload → media worker starts
+
+C. FFmpeg processing/transcoding
+
+D. Poster extraction
+
+E. Callback/database update
+
+F. Frontend detecting the completed state
+
+G. Poster URL generation
+
+H. Browser downloading/rendering the poster
+
+I. Video request/loading on the actual product page
+
+Use browser/network/server logs where useful.
+
+Add temporary diagnostic logging if necessary.
+
+We need to know WHICH stage is responsible for the perceived slowness.
+
+IMPORTANT:
+
+Do not sacrifice visual quality simply to make the numbers look better.
+
+The hair must remain visually good.
+
+But we also cannot serve massive phone-recorded videos directly to mobile users.
+
+Inspect:
+
+- source file sizes
+- output file sizes
+- output dimensions
+- bitrate
+- codec
+- container
+- poster dimensions
+- poster file size
+- URL generation
+- cache headers
+- preload behavior
+- frontend loading behavior
+
+Verify that the current H.264 output is actually compatible with major mobile browsers.
+
+Also verify whether the frontend is accidentally loading the video when it only needs the poster.
+
+==================================================
+CATALOGUE PERFORMANCE
+==================================================
+
+This is a critical requirement.
+
+The catalogue may eventually contain 30–50+ products and potentially 100–200+ products.
+
+The catalogue MUST NOT download every product video.
+
+The catalogue should primarily use the generated poster image.
+
+Investigate the actual DOM/network behavior.
+
+When a customer opens the catalogue:
+
+- Are product videos being requested?
+- Are hidden video elements loading?
+- Are posters being requested efficiently?
+- Is infinite scroll fetching too many records?
+- Are duplicate requests happening?
+- Is the same media being requested repeatedly?
+- Are signed URLs being regenerated unnecessarily?
+- Is a React/server component causing unnecessary re-fetching?
+
+Fix the underlying issue.
+
+The catalogue should remain fast on mobile networks.
+
+==================================================
+HOMEPAGE VIDEO PERFORMANCE
+==================================================
+
+The homepage is intentionally different.
+
+The hero video should receive priority.
+
+Only the small number of intentionally featured product videos should autoplay.
+
+The store video further down the page should not compete with the hero during initial loading.
+
+Use sensible browser/media loading behavior.
+
+Do not implement aggressive autoplay everywhere.
+
+The objective is:
+
+VISUALLY RICH BUT BANDWIDTH DISCIPLINED.
+
+==================================================
+POSTER GENERATION
+==================================================
+
+We deliberately do NOT require the admin to upload thumbnails.
+
+The poster should be generated automatically from the product video.
+
+Verify that this is actually true end-to-end.
+
+Verify:
+
+- poster generation
+- poster storage
+- database reference
+- frontend URL
+- correct aspect ratio/cropping
+- acceptable quality
+- acceptable file size
+- correct behavior if processing fails
+
+If the current poster extraction method is poor, improve it.
+
+Do not add a manual thumbnail requirement.
+
+==================================================
+PRODUCT CREATION
+==================================================
+
+Investigate why product creation is currently unreliable.
+
+Trace the complete flow:
+
+admin form
+→ validation
+→ product creation
+→ category relation
+→ variants
+→ media association
+→ featured/best seller flags
+→ publication state
+→ database
+→ storefront
+
+Make sure failures are visible to the admin.
+
+Do not allow the UI to say "success" if the database operation failed.
+
+Do not allow silent failures.
+
+If something fails, display a useful human-readable error and log enough diagnostic information for development.
+
+==================================================
+FEATURED PRODUCTS
+==================================================
+
+Investigate the Featured flow specifically.
+
+The intended behavior is:
+
+Admin selects/marks a product as featured
+→ database reflects that
+→ homepage retrieves featured products
+→ product appears in the intended Featured section.
+
+The homepage Featured section is intentionally small.
+
+Do not make every product video autoplay.
+
+If there is a limit of approximately three autoplay featured products, enforce that in a sensible way rather than allowing the admin to accidentally create a bandwidth-heavy homepage.
+
+If the current implementation has separate concepts such as:
+
+featured
+best seller
+new arrival
+published
+
+make sure they are not accidentally conflated.
+
+==================================================
+SEARCH + FILTERING
+==================================================
+
+Find out why filtering currently doesn't work.
+
+Test:
+
+- category filtering
+- availability filtering if implemented
+- price filtering if implemented
+- search
+- combinations
+- clearing
+- URL/query-state behavior
+- refresh/deep-link behavior
+- mobile filter UI
+
+The important thing is that filtering must affect the actual product query/results, not merely change frontend state.
+
+Avoid fetching every product into the browser just to filter it there if the catalogue is intended to scale.
+
+Use an appropriate server/database query strategy.
+
+==================================================
+ADMIN DATA CONSISTENCY
+==================================================
+
+Check for stale UI after mutations.
+
+Examples:
+
+Create product → does list update immediately?
+
+Edit product → does storefront reflect it?
+
+Change category → does filter reflect it?
+
+Mark featured → does homepage reflect it?
+
+Unpublish → does storefront remove it?
+
+Change availability → does customer see the correct state?
+
+Delete/archive → does it disappear where appropriate?
+
+If the UI relies on caching/revalidation, inspect whether invalidation is correctly implemented.
+
+A database mutation succeeding while the frontend continues showing stale data is not acceptable.
+
+==================================================
+MEDIA LIFECYCLE
+==================================================
+
+Test:
+
+- upload
+- successful processing
+- failed processing
+- replace video
+- replace poster
+- delete/archive product
+- delete/replace old media
+- orphaned media
+- duplicate media references
+
+Make sure the cleanup process cannot accidentally delete media still referenced by another product.
+
+Make sure replacing a video does not leave the product with no usable video if the new processing fails.
+
+==================================================
+SECURITY AUDIT
+==================================================
+
+Review:
+
+- admin authentication
+- signed cookies/session
+- authorization
+- server-side admin checks
+- Supabase service-role usage
+- storage policies
+- signed upload URLs
+- signed media URLs if used
+- public/private buckets
+- Paystack secret handling
+- webhook verification
+- input validation
+- file type validation
+- upload size limits
+- malicious filenames/paths
+- API authorization
+
+The browser must never receive service-role credentials or other secrets.
+
+==================================================
+REAL DATA — bee-mp4
+==================================================
+
+There is a local folder called:
+
+bee-mp4
+
+It contains the actual product videos for Bee Hairplace.
+
+Use the files in that folder to populate the development store.
+
+First inspect the folder carefully.
+
+Determine:
+
+- all video files
+- their filenames
+- whether the filenames contain product names
+- whether accompanying files contain descriptions/details
+- whether there is any metadata/notes/manifest
+- file dimensions
+- file sizes
+- formats
+
+Do NOT invent product information.
+
+If the product name/details are encoded in filenames or accompanying data, use that information.
+
+If there are clear descriptions/details provided with the files, use them.
+
+If a description is genuinely unavailable, leave it empty rather than inventing marketing copy.
+
+The goal is to have a real working development catalogue using the actual Bee Hairplace videos.
+
+Upload/process the products through the SAME production application/media pipeline.
+
+Do not bypass the application's media system by manually inserting fake database records or directly uploading finished files unless that is necessary for a controlled diagnostic test.
+
+We need to prove that the actual product-upload pipeline works with the real assets.
+
+Create the products with:
+
+- correct name
+- description when provided
+- video
+- generated poster
+- category where it can be determined
+- price only where provided/known
+- variants/lengths only where provided/known
+- sensible publication state
+
+Do NOT fabricate prices.
+
+If the existing product data supplied in the folder clearly provides these details, use them.
+
+If some information is missing, leave that field in a sensible draft state rather than inventing data.
+
+The objective is a populated running site, not fake catalogue data.
+
+==================================================
+TESTING STANDARD
+==================================================
+
+After fixes, do a second full pass.
+
+Do not merely run TypeScript.
+
+Run:
+
+- lint
+- typecheck
+- build
+- unit tests if present
+- integration tests if present
+- actual browser flows
+- real media upload
+- actual database operations
+- actual storefront rendering
+- actual admin operations
+
+Where practical, test both desktop and mobile viewport behavior.
+
+Use the browser/network/devtools or equivalent diagnostics to inspect actual network behavior.
+
+Pay particular attention to console errors, failed requests, 4xx/5xx responses, hydration problems, stale cache, race conditions and client/server boundary mistakes.
+
+If you discover a bug unrelated to the three initially reported problems, fix it if it is part of the current MVP.
+
+Do not leave obvious broken functionality because "it wasn't explicitly requested."
+
+==================================================
+IMPORTANT: DO NOT PAPER OVER BUGS
+==================================================
+
+Do not solve problems by:
+
+- hiding errors
+- adding arbitrary timeouts
+- forcing page reloads after every action
+- disabling functionality
+- making the admin manually refresh to see changes
+- removing filtering
+- removing video
+- making video quality terrible
+- making thumbnail upload mandatory
+- bypassing the media worker
+- inserting fake product records
+- hardcoding products into the frontend
+- adding unnecessary dependencies
+- rewriting working architecture without a reason
+
+Fix root causes.
+
+==================================================
+PERFORMANCE ACCEPTANCE CRITERIA
+==================================================
+
+We want a clear distinction between:
+
+1. Uploading
+2. Processing
+3. UI updating
+4. Media loading
+
+The admin should always know what is happening.
+
+For example:
+
+Uploading...
+Processing video...
+Generating preview...
+Ready ✓
+
+If processing takes time, the UI should communicate that instead of appearing frozen.
+
+Once the poster is available, the admin/product UI should be able to display it without waiting unnecessarily for the full video to load.
+
+The storefront should prioritize posters for catalogue browsing.
+
+The product detail page can load the actual video when appropriate.
+
+==================================================
+FINAL DELIVERABLE
+==================================================
+
+Before saying the task is complete, give me a concise engineering report containing:
+
+1. Bugs discovered.
+2. Root cause of each bug.
+3. Fix implemented.
+4. Performance bottlenecks discovered.
+5. Media pipeline changes.
+6. Catalogue performance changes.
+7. Product/filter/featured fixes.
+8. Any database/schema changes.
+9. Any environment variable/configuration changes.
+10. Tests actually run.
+11. Real Bee Hairplace products successfully loaded.
+12. Any remaining issues that genuinely require external infrastructure/configuration.
+
+Do NOT claim something was verified if you couldn't actually verify it.
+
+If a real Supabase/Paystack/infrastructure dependency prevents a test, say exactly what could and could not be verified.
+
+Most importantly:
+
+DO NOT MOVE ON TO PAGE COPY.
+
+This phase is about making the existing product technically solid, fast, reliable and genuinely usable.
+
+Only after this QA/hardening pass is complete will we return to the page copy and final visual polish.

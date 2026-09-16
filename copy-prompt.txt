@@ -1,0 +1,99 @@
+IMPORTANT CORRECTION TO THE PREVIOUS COPY DIRECTION:
+
+Do NOT position Bee herself as the catalogue, and do not make the website copy revolve around Bee wearing/modeling the hair.
+
+That was overdone.
+
+Bee Hairplace is an e-commerce hair store first.
+
+The personal brand element should come primarily through:
+- Bee's presence in the product videos
+- the visual identity
+- the photography/video style
+- the brand name
+- the social-commerce feel
+
+The COPY should primarily communicate the products and shopping experience.
+
+Do NOT repeatedly use phrases such as:
+- "Worn by Bee"
+- "Modelled by Bee"
+- "Bee is the catalogue"
+- "the way you already know her"
+- "Bee herself"
+- "discover hair through Bee"
+
+Those ideas can become repetitive, cliché and make the site feel like a fan/personal-brand page rather than a professional e-commerce store.
+
+The customer is here to SHOP FOR HAIR.
+
+The copy should feel like a premium, modern Nigerian hair e-commerce brand:
+- confident
+- clean
+- feminine
+- fashionable
+- straightforward
+- commercially useful
+- natural
+
+Do not over-explain the brand.
+
+Do not force a "story" into every section.
+
+Let the product videos communicate Bee's personality naturally.
+
+The visual presence of Bee is the branding. The copy does not need to constantly point it out.
+
+Use concise fashion/e-commerce language.
+
+Examples of the direction:
+
+Hero:
+"Your next look starts here."
+
+or
+
+"Find your next look."
+
+or another similarly strong, natural fashion-commerce headline.
+
+Supporting copy should communicate the collection rather than Bee.
+
+Example:
+"Explore premium human hair in styles, textures and lengths made for your look."
+
+Category section:
+"Shop the collection"
+
+Product cards:
+Name + price only.
+
+Store section:
+"Visit our store"
+
+Supporting copy can communicate the physical shopping option naturally:
+"Prefer to see it in person? Visit us in Abuja or order online for delivery."
+
+Reassurance:
+"Delivery across Abuja"
+"Pickup available in-store"
+"Secure checkout with Paystack"
+
+Final CTA:
+"Find your next look."
+"Shop the collection."
+
+The exact copy can be improved by you based on the existing design, but stay within this direction.
+
+IMPORTANT:
+Do not make every section sound like an advertisement.
+
+Some sections should simply label what they are.
+
+The website should feel confident enough to let the products and videos do the work.
+
+I also added the store video in the bee-mp4 as store.mp4 so add it to the landing page as specified
+
+Before changing all copy, inspect the current pages and identify every piece of visible copy that needs replacing. Then propose the revised copy for the homepage, shop, product detail, cart, checkout, order confirmation, and footer.
+
+Do not implement until the revised copy direction is clear.
