@@ -8,7 +8,7 @@ export function HeroSection({
   posterUrl: string | null;
 }) {
   return (
-    <section className="relative h-[85vh] min-h-[520px] w-full overflow-hidden bg-ink">
+    <section className="relative h-[75svh] min-h-[520px] max-h-[760px] w-full overflow-hidden bg-store-footer">
       {videoUrl && (
         <video
           className="absolute inset-0 h-full w-full object-cover"
@@ -18,22 +18,26 @@ export function HeroSection({
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent" />
-      <div className="relative flex h-full flex-col items-start justify-end px-5 pb-14 sm:px-10">
-        <h1 className="font-editorial text-4xl italic text-ivory sm:text-6xl">
-          Find your next look.
+      <div className="absolute inset-0 bg-black/45" />
+      <div className="store-container relative flex h-full flex-col items-center justify-center text-center md:items-start md:text-left">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand">
+          Bee Hairplace
+        </p>
+        <h1 className="mt-3 max-w-2xl font-heading text-4xl font-bold leading-tight text-white md:text-6xl md:leading-[1.15]">
+          Human Hair Wigs, Bundles &amp; Closures
         </h1>
-        <p className="mt-2 max-w-sm text-sm text-ivory/90 sm:text-base">
-          Premium human hair in styles, textures and lengths made for your look.
+        <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/90 md:text-base">
+          See every piece on video before you buy. Delivery across Abuja or
+          pickup in-store.
         </p>
         <Link
           href="/shop"
-          className="mt-6 inline-flex items-center bg-ivory px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-ivory/90"
+          className="mt-8 inline-flex items-center bg-brand px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-dark"
         >
-          Shop the collection
+          Shop Collection
         </Link>
       </div>
     </section>

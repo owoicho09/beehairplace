@@ -1,0 +1,435 @@
+We need to make a substantial storefront design and UX update for Bee Hairplace.
+
+The objective is to replicate the visual design, page structure, and shopping experience of the reference website screenshots I provided, adapted for Bee Hairplace.
+
+This is NOT a request to invent a new design direction.
+
+The reference screenshots are our primary visual source of truth. Study them carefully and reproduce their layout, section order, proportions, typography, colors, spacing, product presentation, and mobile behavior as closely as reasonably possible.
+
+At the same time, this is an existing application. We must preserve its working architecture, backend, product data, Supabase integration, media processing, admin functionality, and Paystack checkout.
+
+Do not start coding blindly. Inspect the current implementation, understand its structure, then implement the redesign in deliberate passes.
+
+==================================================
+1. FIRST: INSPECT THE EXISTING APPLICATION
+==================================================
+
+Before making changes:
+
+1. Inspect the repository structure and identify the storefront, admin application, shared components, styles, routes, database access, media handling, and checkout implementation.
+2. Read the relevant README and configuration files.
+3. Identify which existing components can be reused and which need substantial visual changes.
+4. Trace the existing data flow for products, categories, product media, cart, orders, and checkout.
+5. Identify any existing implementation limitations that could affect the redesign.
+6. Check whether the reference screenshots are available in the project files.
+
+If the reference images are not accessible from the project, do not pretend that you have inspected image files you cannot access. Use the detailed visual requirements below, and let me know if you need the screenshots placed in the repository for closer pixel-level comparison.
+
+Do not modify the backend simply because you are redesigning the frontend.
+
+==================================================
+2. DESIGN OBJECTIVE: REPLICATE THE REFERENCE
+==================================================
+
+The reference is a conventional fashion and hair e-commerce storefront.
+
+Its visual direction includes:
+
+- A predominantly white or very light background.
+- Pink/magenta as the primary accent for important buttons and interactive elements.
+- Dark text with elegant serif-style headings.
+- A compact header with a logo, cart indicator, and hamburger menu on mobile.
+- Large hair imagery and promotional banners.
+- Clearly separated homepage sections.
+- Conventional product cards with product media, name, price, and Add to cart.
+- A traditional product-detail page with a gallery, product information, options, and purchase controls.
+- A multi-section footer with contact information and useful navigation links.
+
+The result should feel like a polished hair e-commerce website, not a generic SaaS landing page or a minimal editorial portfolio.
+
+Do not introduce a completely different visual language.
+
+Avoid:
+- Replacing the reference layout with a new layout you personally prefer.
+- Excessive gradients, glassmorphism, floating cards, or decorative effects absent from the reference.
+- Unnecessary animation.
+- Excessive rounded containers.
+- Large empty areas that make the page feel unfinished.
+- Repeated calls to action that add no value.
+- Generic luxury copy that does not communicate anything useful.
+- Making Bee herself the entire story of the store.
+
+Bee Hairplace should feel like a real hair brand and online store. Bee can appear naturally in the product videos and imagery, but do not repeatedly use phrases such as “Bee is the catalogue,” “Worn by Bee,” or “Modelled by Bee” as the central brand message.
+
+Use the reference's visual hierarchy while keeping the copy appropriate to Bee Hairplace.
+
+==================================================
+3. PASS ONE — SHARED DESIGN SYSTEM AND HOMEPAGE
+==================================================
+
+Start by establishing the shared storefront design system.
+
+A. DESIGN TOKENS
+
+Inspect the current styles and create or refine shared tokens for:
+
+- Primary pink accent.
+- Background and surface colors.
+- Main text and secondary text.
+- Borders and dividers.
+- Heading and body typography.
+- Font sizes and line heights.
+- Section spacing.
+- Button dimensions and states.
+- Product-card spacing.
+- Responsive breakpoints.
+
+Use the screenshots to guide the values. Do not arbitrarily introduce new colors or typography that conflict with the reference.
+
+B. HEADER AND NAVIGATION
+
+Recreate the reference's compact header.
+
+Include:
+- Bee Hairplace logo.
+- Cart icon and item count where appropriate.
+- Hamburger menu on mobile.
+- Appropriate navigation links.
+- Functional navigation and cart interactions.
+
+Use the existing logo asset if it is already available in the project. Do not replace it with an invented logo.
+
+Make sure the header works properly on small screens and does not consume excessive vertical space.
+
+C. HOMEPAGE STRUCTURE
+
+Recreate the homepage in the following order, using the reference screenshots to guide proportions and spacing:
+
+1. Header.
+2. Hero banner.
+3. Why Choose Us / trust section.
+4. Image-based product categories.
+5. Featured Products.
+6. New Arrival Collection promotional banner.
+7. Trending Now product section.
+8. Latest updates or additional product discovery content, where supported by the reference.
+9. Footer.
+
+Use the reference's actual visual structure rather than turning every section into a completely different component style.
+
+HERO:
+- Use the existing hero media where appropriate.
+- Keep the image/video visually prominent.
+- Use a short, clear headline.
+- Include concise supporting copy.
+- Include a prominent pink CTA.
+- Make the CTA functional and direct it to the appropriate shopping destination.
+- Ensure text remains readable over the media.
+
+WHY CHOOSE US:
+- Reproduce the reference's trust-section concept.
+- Use concise, truthful benefits relevant to Bee Hairplace.
+- Do not invent guarantees, certifications, reviews, or business claims.
+
+CATEGORIES:
+- Use image-based category cards similar to the reference.
+- Pull category information and images from the actual application data.
+- Make each category link functional.
+
+FEATURED PRODUCTS AND TRENDING NOW:
+- Reproduce the reference's product-section layouts.
+- Display product media, product name, price, and Add to cart.
+- Use real product data.
+- Ensure Add to cart works without forcing customers to open the product page first, provided required product options are not missing.
+
+NEW ARRIVAL BANNER:
+- Reproduce the prominent promotional banner style.
+- Use available Bee Hairplace imagery.
+- Keep the copy short and the CTA functional.
+- Do not invent a discount or promotion.
+- If the admin already supports merchandising this section, use that capability. Do not hardcode fake products.
+
+LATEST UPDATES:
+- Inspect the reference carefully and reproduce the relevant content structure if it is part of the actual design.
+- Do not add a social feed or unrelated section merely to fill space.
+
+FOOTER:
+- Reproduce the reference's multi-section footer structure, adapted to Bee Hairplace.
+- Include relevant contact details, store information, and useful links.
+- Use actual configured business information.
+- Do not invent a street address, phone number, opening hours, or social profile.
+- Avoid duplicating the same information excessively.
+
+==================================================
+4. PASS TWO — SHOPPING EXPERIENCE
+==================================================
+
+After the shared design and homepage are in place, update the shop and product-purchase pages.
+
+A. SHOP AND CATEGORY PAGES
+
+The reference uses a conventional product-card layout.
+
+Reproduce that visual style, including:
+- Product media.
+- Product name.
+- Price.
+- Pink Add to cart button.
+- Clear product spacing and alignment.
+- Search and filtering controls.
+- Category navigation.
+
+IMPORTANT MOBILE REQUIREMENT:
+
+The reference product sections use a two-column layout on mobile.
+
+Use a two-column mobile product layout to match the reference. This supersedes the earlier three-column catalogue direction for this redesign.
+
+Ensure the cards remain readable and usable on small screens. Do not allow long product names, prices, or buttons to break the layout.
+
+The catalogue may grow substantially, so retain efficient loading and pagination/infinite-scroll behavior where already implemented.
+
+Do not load every full product video simply because products appear in a grid.
+
+B. PRODUCT MEDIA
+
+The application already has a video-first product-media pipeline.
+
+Preserve it.
+
+Requirements:
+- Use generated posters/thumbnails in product grids where available.
+- Do not require admins to upload a separate thumbnail.
+- Do not download or autoplay every product video in the catalogue.
+- Load full video media when appropriate, such as on the product detail page.
+- Keep existing video processing and storage behavior intact.
+- Support product photos where available.
+- Do not make product photos mandatory if the existing system allows video-only products.
+
+C. PRODUCT DETAIL PAGE
+
+Recreate the conventional product-detail layout shown in the reference.
+
+Include:
+- Product image/video gallery.
+- Product name.
+- Price.
+- Product options and variants, where applicable.
+- Quantity selector.
+- Add to cart button.
+- Category and relevant tags/information.
+- Description.
+- Additional information where appropriate.
+- Related products.
+
+The gallery should be visually prominent and easy to use on mobile.
+
+Adapt the reference's information tabs/sections to hair products. Do not display irrelevant WooCommerce-style fields such as weight or dimensions unless Bee Hairplace actually needs and maintains that information.
+
+Do not invent reviews or review counts.
+
+Keep the existing product data model and variant/pricing behavior working.
+
+D. CART
+
+Restyle the cart to match the new storefront.
+
+Preserve:
+- Existing cart state and persistence.
+- Quantity changes.
+- Item removal.
+- Price calculations.
+- Subtotals and totals.
+- Navigation to checkout.
+
+Make sure the cart remains usable on mobile.
+
+E. CHECKOUT AND ORDER CONFIRMATION
+
+Restyle checkout and order confirmation to match the storefront.
+
+Preserve the existing guest-checkout approach. Customers should not be forced to create accounts.
+
+Preserve the actual checkout and payment flow:
+- Customer information collection.
+- Delivery or pickup selection.
+- Order creation.
+- Paystack initialization.
+- Payment verification.
+- Webhook handling.
+- Order confirmation.
+
+Do not replace real payment behavior with a mock checkout.
+
+Do not expose secret keys or privileged server credentials to the browser.
+
+==================================================
+5. PASS THREE — VISUAL QA AND FUNCTIONAL TESTING
+==================================================
+
+After implementation, compare the result against the reference screenshots.
+
+Do not declare completion just because the application builds.
+
+A. VISUAL COMPARISON
+
+At minimum, inspect the following at mobile and desktop widths:
+
+1. Header.
+2. Hero.
+3. Trust section.
+4. Categories.
+5. Featured products.
+6. New arrivals banner.
+7. Trending products.
+8. Shop grid.
+9. Product detail page.
+10. Cart.
+11. Checkout.
+12. Footer.
+
+Pay particular attention to:
+- Section order.
+- Section height.
+- Content width.
+- Image proportions.
+- Heading scale.
+- Typography.
+- Button size and placement.
+- Product-card alignment.
+- White space.
+- Mobile stacking.
+- Horizontal overflow.
+- Header behavior.
+- Footer density.
+
+Use browser screenshots or the project's available browser-testing tools to inspect the actual rendered result.
+
+Where a difference is visible, correct it rather than simply explaining it away.
+
+B. FUNCTIONAL REGRESSION TESTS
+
+Verify that:
+
+- Navigation links work.
+- Category cards open the correct category.
+- Search returns appropriate products.
+- Filters actually affect the displayed results.
+- Product cards open the correct product.
+- Add to cart works.
+- Quantity updates work.
+- Cart totals are correct.
+- Checkout validates required fields.
+- Delivery and pickup options work.
+- Paystack initialization and verification remain connected to the real implementation.
+- Order confirmation works.
+- Product media loads correctly.
+- Product posters display correctly.
+- Admin product changes appear on the storefront.
+- Featured and new-arrival merchandising uses actual configured products.
+- Mobile navigation and controls work.
+
+Use the available test environment and actual application data wherever possible.
+
+Do not claim that a payment, webhook, or external integration has been verified if you did not actually test it.
+
+C. PERFORMANCE
+
+Make sure the redesign does not create unnecessary performance regressions.
+
+In particular:
+- Do not eagerly load every product video.
+- Avoid duplicate media requests.
+- Use appropriate image sizes.
+- Use lazy loading for below-the-fold content.
+- Preserve efficient product querying and pagination.
+- Avoid unnecessary client-side re-fetching.
+- Avoid introducing large dependencies without a clear need.
+
+D. CODE QUALITY
+
+Run the relevant:
+- Lint checks.
+- Type checks.
+- Production build.
+- Automated tests.
+
+Fix errors introduced by the redesign.
+
+Do not suppress errors, remove useful functionality, or add arbitrary delays/reloads as a substitute for fixing the underlying cause.
+
+==================================================
+6. IMPORTANT EXISTING REQUIREMENTS
+==================================================
+
+These requirements remain in effect unless explicitly changed above:
+
+- Brand: Bee Hairplace.
+- Location: Abuja, Nigeria.
+- Guest checkout; customer accounts are not required.
+- Paystack payment integration.
+- Supabase for the existing database/storage setup.
+- Admin authentication and existing admin functionality must remain intact.
+- Product name and price are the essential catalogue information.
+- Product descriptions may be optional.
+- Product lengths/variants must follow the existing data model and admin behavior.
+- Admin should be able to manage products and merchandising.
+- Product video posters should be generated automatically.
+- Do not implement TikTok import.
+- Do not invent product data, prices, stock, promotions, reviews, business details, or customer claims.
+- Preserve the media worker and its processing pipeline.
+- Do not rebuild working backend functionality just to achieve a visual change.
+
+If a reference feature conflicts with these requirements, adapt the reference feature rather than breaking the existing requirements.
+
+==================================================
+7. IMPLEMENTATION APPROACH
+==================================================
+
+Work in these three passes:
+
+PASS 1:
+Shared design system, header, navigation, footer, and homepage.
+
+PASS 2:
+Shop, category pages, product cards, product detail, cart, and checkout styling.
+
+PASS 3:
+Visual comparison, responsive corrections, functional regression tests, performance checks, and final verification.
+
+Within each pass:
+1. Inspect the relevant code.
+2. Identify the intended changes.
+3. Implement them consistently.
+4. Run relevant checks.
+5. Inspect the rendered result.
+6. Fix problems before moving on.
+
+Do not stop after producing a plan. Once you understand the codebase and have enough information, proceed with implementation.
+
+Do not rewrite the entire application if targeted changes will achieve the objective.
+
+Do not create duplicate components or duplicate data flows unnecessarily.
+
+Do not modify unrelated admin screens unless a shared component change requires it.
+
+If you discover a genuine blocker, explain the specific blocker and what information or access is required. Do not silently work around it with fake data.
+
+==================================================
+8. FINAL REPORT
+==================================================
+
+When finished, provide a concise but useful report covering:
+
+1. What storefront pages and components were redesigned.
+2. How the implementation follows the reference screenshots.
+3. Any important differences that remain and why.
+4. Confirmation of the mobile two-column product layout.
+5. Confirmation that the existing backend, Supabase, media pipeline, and Paystack flow were preserved.
+6. Tests and checks actually run, with their results.
+7. Any functionality that could not be verified.
+8. Any remaining issues or required environment configuration.
+
+Be precise. Distinguish between something that was implemented, something that was tested successfully, and something that still needs real-world verification.
+
+The goal is a Bee Hairplace storefront that closely reproduces the reference website's design and shopping experience while retaining the working application underneath.

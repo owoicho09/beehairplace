@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useCartStore } from "@/lib/cart/store";
 import { formatNaira } from "@/lib/utils";
@@ -34,8 +34,16 @@ export function PurchasePanel({
   const [variantId, setVariantId] = useState<string | null>(
     hasVariants ? variants[0].id : null,
   );
+  const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
   const router = useRouter();
   const addItem = useCartStore((s) => s.addItem);
+
+  useEffect(() => {
+    if (!added) return;
+    const timer = setTimeout(() => setAdded(false), 1500);
+    return () => clearTimeout(timer);
+  }, [added]);
 
   const selectedVariant = hasVariants
     ? variants.find((v) => v.id === variantId)
@@ -45,7 +53,7 @@ export function PurchasePanel({
     ? selectedVariant?.availability === "in_stock"
     : availability === "in_stock";
 
-  function buildCartItem(quantity: number) {
+  function buildCartItem() {
     return {
       productId,
       variantId,
@@ -60,11 +68,11 @@ export function PurchasePanel({
 
   return (
     <div>
-      <p className="text-xl text-ink">{formatNaira(price)}</p>
+      <p className="text-xl font-bold text-store-ink">{formatNaira(price)}</p>
 
       {hasVariants && (
-        <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-warm-grey">
+        <div className="mt-6">
+          <p className="text-xs font-medium uppercase tracking-wide text-store-muted">
             Length
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -74,10 +82,11 @@ export function PurchasePanel({
                 type="button"
                 disabled={variant.availability === "out_of_stock"}
                 onClick={() => setVariantId(variant.id)}
-                className={`rounded-full border px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-40 ${
+                aria-pressed={variantId === variant.id}
+                className={`border px-4 py-2 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
                   variantId === variant.id
-                    ? "border-ink bg-ink text-ivory"
-                    : "border-line text-ink"
+                    ? "border-brand bg-brand text-white"
+                    : "border-store-line text-store-ink hover:border-brand"
                 }`}
               >
                 {variant.label}
@@ -87,29 +96,58 @@ export function PurchasePanel({
         </div>
       )}
 
-      {!inStock ? (
-        <p className="mt-6 text-sm text-ink-soft">Currently out of stock.</p>
-      ) : (
-        <div className="mt-6 flex gap-3">
-          <button
-            type="button"
-            onClick={() => {
-              addItem(buildCartItem(1));
-              router.push("/checkout");
-            }}
-            className="flex-1 bg-ink py-3 text-sm font-medium text-ivory transition-colors hover:bg-ink-soft"
-          >
-            Buy now
-          </button>
-          <button
-            type="button"
-            onClick={() => addItem(buildCartItem(1))}
-            className="flex-1 border border-ink py-3 text-sm font-medium text-ink transition-colors hover:bg-ivory-dim"
-          >
-            Add to bag
-          </button>
-        </div>
-      )}
+      <div className="mt-6 border-y border-store-line py-5">
+        {!inStock ? (
+          <p className="text-sm text-store-muted">Currently out of stock.</p>
+        ) : (
+          <>
+            <div className="flex gap-3">
+              <div className="flex items-center border border-store-line">
+                <button
+                  type="button"
+                  aria-label="Decrease quantity"
+                  className="h-11 w-9 text-lg text-store-muted hover:text-store-ink disabled:opacity-40"
+                  disabled={quantity <= 1}
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                >
+                  −
+                </button>
+                <span className="w-8 text-center text-sm" aria-live="polite">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  aria-label="Increase quantity"
+                  className="h-11 w-9 text-lg text-store-muted hover:text-store-ink"
+                  onClick={() => setQuantity((q) => q + 1)}
+                >
+                  +
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  addItem(buildCartItem());
+                  setAdded(true);
+                }}
+                className="h-11 flex-1 bg-brand-soft px-4 text-sm font-medium text-store-ink transition-colors hover:bg-brand hover:text-white"
+              >
+                {added ? "Added ✓" : "Add to cart"}
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                addItem(buildCartItem());
+                router.push("/checkout");
+              }}
+              className="mt-3 h-11 w-full bg-store-ink text-sm font-medium text-white transition-colors hover:bg-brand"
+            >
+              Buy now
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }

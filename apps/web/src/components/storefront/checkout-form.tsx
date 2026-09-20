@@ -125,66 +125,66 @@ export function CheckoutForm({
   return (
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
-          <label className="text-sm text-ink-soft">Full name</label>
+          <label className="text-sm text-store-muted">Full name</label>
           <input
             {...register("customerName")}
-            className="mt-1 w-full border border-line px-3 py-2.5 text-sm outline-none focus:border-ink"
+            className="mt-1 w-full border border-store-line bg-white px-3 py-2.5 text-sm outline-none focus:border-brand"
           />
           {errors.customerName && (
-            <p className="mt-1 text-xs text-burgundy">{errors.customerName.message}</p>
+            <p className="mt-1 text-xs text-red-600">{errors.customerName.message}</p>
           )}
         </div>
 
         <div>
-          <label className="text-sm text-ink-soft">Email</label>
+          <label className="text-sm text-store-muted">Email</label>
           <input
             type="email"
             {...register("email")}
-            className="mt-1 w-full border border-line px-3 py-2.5 text-sm outline-none focus:border-ink"
+            className="mt-1 w-full border border-store-line bg-white px-3 py-2.5 text-sm outline-none focus:border-brand"
           />
           {errors.email && (
-            <p className="mt-1 text-xs text-burgundy">{errors.email.message}</p>
+            <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
           )}
         </div>
 
         <div>
-          <label className="text-sm text-ink-soft">Phone / WhatsApp</label>
+          <label className="text-sm text-store-muted">Phone / WhatsApp</label>
           <input
             type="tel"
             {...register("phone")}
-            className="mt-1 w-full border border-line px-3 py-2.5 text-sm outline-none focus:border-ink"
+            className="mt-1 w-full border border-store-line bg-white px-3 py-2.5 text-sm outline-none focus:border-brand"
           />
           {errors.phone && (
-            <p className="mt-1 text-xs text-burgundy">{errors.phone.message}</p>
+            <p className="mt-1 text-xs text-red-600">{errors.phone.message}</p>
           )}
         </div>
 
         <div>
-          <p className="text-sm text-ink-soft">Fulfilment</p>
+          <p className="text-sm text-store-muted">Fulfilment</p>
           <div className="mt-2 flex gap-2">
             <label
               className={`flex-1 cursor-pointer border px-4 py-2.5 text-center text-sm ${
-                fulfilmentMethod === "delivery" ? "border-ink bg-ink text-ivory" : "border-line"
+                fulfilmentMethod === "delivery" ? "border-brand bg-brand text-white" : "border-store-line"
               }`}
             >
               <input
                 type="radio"
                 value="delivery"
                 {...register("fulfilmentMethod")}
-                className="hidden"
+                className="sr-only"
               />
               Delivery
             </label>
             <label
               className={`flex-1 cursor-pointer border px-4 py-2.5 text-center text-sm ${
-                fulfilmentMethod === "pickup" ? "border-ink bg-ink text-ivory" : "border-line"
+                fulfilmentMethod === "pickup" ? "border-brand bg-brand text-white" : "border-store-line"
               }`}
             >
               <input
                 type="radio"
                 value="pickup"
                 {...register("fulfilmentMethod")}
-                className="hidden"
+                className="sr-only"
               />
               Pickup in Abuja
             </label>
@@ -194,22 +194,22 @@ export function CheckoutForm({
         {fulfilmentMethod === "delivery" && (
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-ink-soft">Delivery address</label>
+              <label className="text-sm text-store-muted">Delivery address</label>
               <textarea
                 {...register("address")}
                 rows={2}
-                className="mt-1 w-full border border-line px-3 py-2.5 text-sm outline-none focus:border-ink"
+                className="mt-1 w-full border border-store-line bg-white px-3 py-2.5 text-sm outline-none focus:border-brand"
               />
               {errors.address && (
-                <p className="mt-1 text-xs text-burgundy">{errors.address.message}</p>
+                <p className="mt-1 text-xs text-red-600">{errors.address.message}</p>
               )}
             </div>
             {deliveryZones.length > 0 && (
               <div>
-                <label className="text-sm text-ink-soft">Zone</label>
+                <label className="text-sm text-store-muted">Zone</label>
                 <select
                   {...register("zone")}
-                  className="mt-1 w-full border border-line px-3 py-2.5 text-sm outline-none focus:border-ink"
+                  className="mt-1 w-full border border-store-line bg-white px-3 py-2.5 text-sm outline-none focus:border-brand"
                 >
                   <option value="">Standard</option>
                   {deliveryZones.map((z) => (
@@ -221,36 +221,36 @@ export function CheckoutForm({
               </div>
             )}
             <div>
-              <label className="text-sm text-ink-soft">Notes (optional)</label>
+              <label className="text-sm text-store-muted">Notes (optional)</label>
               <input
                 {...register("notes")}
-                className="mt-1 w-full border border-line px-3 py-2.5 text-sm outline-none focus:border-ink"
+                className="mt-1 w-full border border-store-line bg-white px-3 py-2.5 text-sm outline-none focus:border-brand"
               />
             </div>
           </div>
         )}
 
-        <div className="border-t border-line pt-4 text-sm">
-          <div className="flex justify-between text-ink-soft">
+        <div className="border-t border-store-line pt-4 text-sm">
+          <div className="flex justify-between text-store-muted">
             <span>Subtotal</span>
             <span>{formatNaira(subtotal)}</span>
           </div>
-          <div className="mt-1 flex justify-between text-ink-soft">
+          <div className="mt-1 flex justify-between text-store-muted">
             <span>{fulfilmentMethod === "pickup" ? "Pickup" : "Delivery"}</span>
             <span>{estimatedDeliveryFee === 0 ? "Free" : formatNaira(estimatedDeliveryFee)}</span>
           </div>
-          <div className="mt-2 flex justify-between text-base text-ink">
+          <div className="mt-2 flex justify-between text-base font-bold text-store-ink">
             <span>Total</span>
             <span>{formatNaira(subtotal + estimatedDeliveryFee)}</span>
           </div>
         </div>
 
-        {submitError && <p className="text-sm text-burgundy">{submitError}</p>}
+        {submitError && <p className="text-sm text-red-600">{submitError}</p>}
 
         <button
           type="submit"
           disabled={isSubmitting || items.length === 0}
-          className="w-full bg-ink py-3.5 text-sm font-medium text-ivory transition-colors hover:bg-ink-soft disabled:opacity-50"
+          className="w-full bg-brand py-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-dark disabled:opacity-50"
         >
           {isSubmitting ? "Processing…" : "Pay now"}
         </button>

@@ -1,20 +1,27 @@
-import { FeaturedSection } from "@/components/storefront/featured-section";
+import { CategoryCards } from "@/components/storefront/category-cards";
 import { HeroSection } from "@/components/storefront/hero-section";
-import { StoreSection } from "@/components/storefront/store-section";
+import { NewArrivalBanner } from "@/components/storefront/new-arrival-banner";
+import { ProductSection } from "@/components/storefront/product-section";
+import { WhyChooseUs } from "@/components/storefront/why-choose-us";
 import {
   getBestSellers,
+  getCategoryCards,
   getFeaturedProducts,
+  getNewArrival,
   getStoreSettings,
 } from "@/lib/catalog/queries";
 
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [settings, featured, bestSellers] = await Promise.all([
-    getStoreSettings(),
-    getFeaturedProducts(),
-    getBestSellers(),
-  ]);
+  const [settings, categories, featured, newArrival, trending] =
+    await Promise.all([
+      getStoreSettings(),
+      getCategoryCards(),
+      getFeaturedProducts(),
+      getNewArrival(),
+      getBestSellers(),
+    ]);
 
   return (
     <>
@@ -22,41 +29,22 @@ export default async function HomePage() {
         videoUrl={settings?.heroMedia?.processedUrl ?? null}
         posterUrl={settings?.heroMedia?.posterUrl ?? null}
       />
-
-      <FeaturedSection
-        title="New in"
-        viewAllHref="/shop"
-        products={featured.map((p) => ({
-          slug: p.slug,
-          name: p.name,
-          startingPrice: p.startingPrice,
-          hasVariants: p.hasVariants,
-          posterUrl: p.posterUrl,
-          videoUrl: p.videoUrl,
-        }))}
+      <WhyChooseUs />
+      <CategoryCards categories={categories} />
+      <ProductSection
+        centered
+        title="Featured Products"
+        subtitle="Check out the latest updates"
+        products={featured}
+        href="/shop"
+        linkLabel="View All"
       />
-
-      <FeaturedSection
-        title="Best sellers"
-        viewAllHref="/shop"
-        products={bestSellers.map((p) => ({
-          slug: p.slug,
-          name: p.name,
-          startingPrice: p.startingPrice,
-          hasVariants: p.hasVariants,
-          posterUrl: p.posterUrl,
-          // Posters only: autoplay is reserved for the small "New in" set
-          // above, so the homepage stays bandwidth-disciplined on mobile.
-          videoUrl: null,
-        }))}
-      />
-
-      <StoreSection
-        videoUrl={settings?.storeVideoMedia?.processedUrl ?? null}
-        posterUrl={settings?.storeVideoMedia?.posterUrl ?? null}
-        address={settings?.address ?? null}
-        openingHours={settings?.openingHours ?? null}
-        whatsappNumber={settings?.whatsappNumber ?? null}
+      <NewArrivalBanner posterUrl={newArrival?.posterUrl ?? null} />
+      <ProductSection
+        title="Trending Now"
+        products={trending}
+        href="/shop"
+        linkLabel="Browse Shop"
       />
     </>
   );
