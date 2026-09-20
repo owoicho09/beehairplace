@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* Admin + legacy tokens (admin screens still use these) */
   --color-ivory: #f7f3ec;
   --color-ivory-dim: #efe9de;
   --color-ink: #1c1815;
@@ -10,6 +11,18 @@
   --color-line: #e1d8c9;
   --color-burgundy: #6b2737;
   --color-burgundy-dark: #521d2a;
+
+  /* Storefront tokens, sampled from the reference screenshots */
+  --color-brand: #e868d0; /* primary pink: hero + banner buttons, active nav */
+  --color-brand-dark: #d24fb9; /* hover / pressed */
+  --color-brand-soft: #f4a0dc; /* pale pink "Add to cart" buttons */
+  --color-store-bg: #fcfcfc;
+  --color-store-ink: #111111;
+  --color-store-muted: #555555;
+  --color-store-line: #ececec;
+  --color-store-tint: #f4f4f4; /* neutral grey buttons ("Browse Shop") */
+  --color-store-gold: #a68d6c; /* outline icons in the trust section */
+  --color-store-footer: #05070b;
 }
 
 @theme inline {
@@ -22,8 +35,19 @@
   --color-line: var(--color-line);
   --color-burgundy: var(--color-burgundy);
   --color-burgundy-dark: var(--color-burgundy-dark);
+  --color-brand: var(--color-brand);
+  --color-brand-dark: var(--color-brand-dark);
+  --color-brand-soft: var(--color-brand-soft);
+  --color-store-bg: var(--color-store-bg);
+  --color-store-ink: var(--color-store-ink);
+  --color-store-muted: var(--color-store-muted);
+  --color-store-line: var(--color-store-line);
+  --color-store-tint: var(--color-store-tint);
+  --color-store-gold: var(--color-store-gold);
+  --color-store-footer: var(--color-store-footer);
   --font-sans: var(--font-ui);
   --font-editorial: var(--font-editorial);
+  --font-heading: var(--font-heading);
 }
 
 body {
@@ -33,6 +57,17 @@ body {
 
 .font-editorial {
   font-family: var(--font-editorial);
+}
+
+/* Storefront content column (~1140px, matching the reference's side margins) */
+@utility store-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1140px;
+  padding-inline: 1rem;
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
 }
 
 /* Hide scrollbar on horizontal swipe rows while keeping them scrollable */

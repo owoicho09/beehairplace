@@ -7,6 +7,9 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],
+  // Only the admin UI uses this face now; the storefront headings use
+  // Merriweather (see (storefront)/layout.tsx), so don't preload it there.
+  preload: false,
 });
 
 const inter = Inter({

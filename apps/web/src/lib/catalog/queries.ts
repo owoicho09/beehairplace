@@ -97,13 +97,14 @@ function toCatalogCard(
     name: product.name,
     startingPrice,
     hasVariants: product.hasVariants,
+    availability: product.availability,
     posterUrl: product.media[0]?.posterUrl ?? null,
     hasVideo: product.media.some((m) => m.kind === "video" && m.status === "ready"),
   };
 }
 
-// getFeaturedProducts, getBestSellers, getStoreSettings and
-// getDeliverySettings all run during static generation of "/", "/cart" and
+// getFeaturedProducts, getBestSellers, getCategoryCards, getNewArrival,
+// getStoreSettings and getDeliverySettings all run during static generation of "/", "/cart" and
 // "/checkout" (next build prerenders any route that doesn't opt out of
 // static rendering, which executes their Server Component tree, including
 // these DB calls, once at build time). An unguarded throw here — e.g. from
@@ -126,12 +127,7 @@ export async function getFeaturedProducts() {
         variants: true,
       },
     });
-    return rows.map((product) => ({
-      ...toCatalogCard(product),
-      videoUrl:
-        product.media.find((m) => m.kind === "video" && m.status === "ready")
-          ?.processedUrl ?? null,
-    }));
+    return rows.map(toCatalogCard);
   } catch (error) {
     console.error("getFeaturedProducts failed, degrading gracefully", error);
     return [];
@@ -157,6 +153,66 @@ export async function getBestSellers() {
   } catch (error) {
     console.error("getBestSellers failed, degrading gracefully", error);
     return [];
+  }
+}
+
+// Category cards on the homepage show a real product poster: categories have
+// no image of their own, so each one borrows the newest published product's
+// poster. Categories with no published products are omitted (they would be an
+// empty shop page). Guarded like the other homepage queries — see above.
+export async function getCategoryCards() {
+  try {
+    const rows = await db.query.categories.findMany({
+      orderBy: [asc(categories.sortOrder), asc(categories.name)],
+      with: {
+        products: {
+          where: (p, { and, eq, isNull }) =>
+            and(eq(p.publishStatus, "published"), isNull(p.archivedAt)),
+          orderBy: (p, { desc }) => desc(p.createdAt),
+          limit: 1,
+          with: {
+            media: {
+              where: (m, { and, eq, isNull }) =>
+                and(eq(m.role, "primary"), isNull(m.deletedAt)),
+            },
+          },
+        },
+      },
+    });
+    return rows
+      .filter((category) => category.products.length > 0)
+      .map((category) => ({
+        slug: category.slug,
+        name: category.name,
+        posterUrl: category.products[0].media[0]?.posterUrl ?? null,
+      }));
+  } catch (error) {
+    console.error("getCategoryCards failed, degrading gracefully", error);
+    return [];
+  }
+}
+
+// Backs the "New Arrival Collection" banner: the most recently added
+// published product supplies the banner image. Nothing is hard-coded.
+export async function getNewArrival() {
+  try {
+    const rows = await db.query.products.findMany({
+      where: publishedProduct,
+      orderBy: [desc(products.createdAt)],
+      limit: 5,
+      with: {
+        media: {
+          where: (m, { and, eq, isNull }) =>
+            and(eq(m.role, "primary"), isNull(m.deletedAt)),
+        },
+      },
+    });
+    const withPoster = rows.find((p) => p.media[0]?.posterUrl);
+    if (!withPoster) return null;
+    return { posterUrl: withPoster.media[0].posterUrl as string };
+  } catch (error) {
+    console.error("getNewArrival failed, degrading gracefully", error);
+    return null;
   }
 }
 
