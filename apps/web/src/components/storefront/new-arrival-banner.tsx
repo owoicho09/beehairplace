@@ -4,14 +4,16 @@ import Link from "next/link";
 import newArrivalImage from "@/assets/new-arrival.jpg";
 
 /**
- * Full-bleed lifestyle banner. The photo is portrait, so the wide desktop crop
- * is anchored to the top where her face and hair are; on phones the banner is
- * tall enough to show the whole pose, with the copy at the bottom.
+ * Full-bleed lifestyle banner. The photo is a portrait frame of a model posed
+ * sideways, so the banner stays landscape at every size and the crop is
+ * anchored to the top of the image, where her face, blonde hair and tilted pose
+ * are. The image is never rotated or stretched; on phones the banner is just a
+ * little taller than on desktop so the copy fits below her face.
  */
 export function NewArrivalBanner() {
   return (
     <section className="store-container py-6 md:py-8">
-      <div className="relative flex aspect-[4/5] items-end justify-center overflow-hidden bg-hero-bg md:aspect-[2.8/1] md:items-center md:justify-start">
+      <div className="relative flex aspect-[6/5] items-end justify-center overflow-hidden bg-hero-bg md:aspect-[2.8/1] md:items-center md:justify-start">
         <Image
           src={newArrivalImage}
           alt=""

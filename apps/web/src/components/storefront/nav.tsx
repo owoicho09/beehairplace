@@ -33,18 +33,15 @@ export function StorefrontNav() {
   return (
     <header className="sticky top-0 z-40 border-b border-store-line bg-white">
       <nav className="store-container flex h-14 items-center md:h-16">
-        <Link href="/" className="flex shrink-0 items-center gap-3">
+        <Link href="/" className="flex shrink-0 items-center">
           <Image
             src="/bee-hairplace-logo.jpg"
             alt="Bee Hairplace"
-            width={44}
-            height={44}
+            width={48}
+            height={48}
             priority
-            className="h-10 w-10 md:h-11 md:w-11"
+            className="h-10 w-10 md:h-12 md:w-12"
           />
-          <span className="hidden font-heading text-base font-bold sm:inline">
-            Bee Hairplace
-          </span>
         </Link>
 
         <div className="ml-10 hidden items-stretch gap-8 self-stretch md:flex">
