@@ -103,7 +103,7 @@ function toCatalogCard(
   };
 }
 
-// getFeaturedProducts, getBestSellers, getCategoryCards, getNewArrival,
+// getFeaturedProducts, getBestSellers, getCategoryCards,
 // getStoreSettings and getDeliverySettings all run during static generation of "/", "/cart" and
 // "/checkout" (next build prerenders any route that doesn't opt out of
 // static rendering, which executes their Server Component tree, including
@@ -189,30 +189,6 @@ export async function getCategoryCards() {
   } catch (error) {
     console.error("getCategoryCards failed, degrading gracefully", error);
     return [];
-  }
-}
-
-// Backs the "New Arrival Collection" banner: the most recently added
-// published product supplies the banner image. Nothing is hard-coded.
-export async function getNewArrival() {
-  try {
-    const rows = await db.query.products.findMany({
-      where: publishedProduct,
-      orderBy: [desc(products.createdAt)],
-      limit: 5,
-      with: {
-        media: {
-          where: (m, { and, eq, isNull }) =>
-            and(eq(m.role, "primary"), isNull(m.deletedAt)),
-        },
-      },
-    });
-    const withPoster = rows.find((p) => p.media[0]?.posterUrl);
-    if (!withPoster) return null;
-    return { posterUrl: withPoster.media[0].posterUrl as string };
-  } catch (error) {
-    console.error("getNewArrival failed, degrading gracefully", error);
-    return null;
   }
 }
 

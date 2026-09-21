@@ -1,31 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export function NewArrivalBanner({
-  posterUrl,
-}: {
-  posterUrl: string | null;
-}) {
-  if (!posterUrl) return null;
+import newArrivalImage from "@/assets/new-arrival.jpg";
 
+/**
+ * Full-bleed lifestyle banner. The photo is portrait, so the wide desktop crop
+ * is anchored to the top where her face and hair are; on phones the banner is
+ * tall enough to show the whole pose, with the copy at the bottom.
+ */
+export function NewArrivalBanner() {
   return (
     <section className="store-container py-6 md:py-8">
-      <div className="relative flex aspect-[8/7] items-center justify-center overflow-hidden bg-store-footer md:aspect-[2.8/1] md:justify-start">
-        {/* Product posters are portrait video frames, so on desktop the image
-            sits in a right-hand panel near its native size instead of being
-            blown up to the full banner width. */}
-        <div className="absolute inset-0 md:left-auto md:w-[42%]">
-          <Image
-            src={posterUrl}
-            alt=""
-            fill
-            sizes="(max-width: 768px) 100vw, 480px"
-            className="object-cover object-[center_70%] md:object-[center_40%]"
-          />
-          <div className="absolute inset-0 bg-black/55 md:hidden" />
-          <div className="absolute inset-y-0 left-0 hidden w-2/5 bg-linear-to-r from-store-footer to-transparent md:block" />
-        </div>
-        <div className="relative px-6 text-center text-white md:px-12 md:text-left">
+      <div className="relative flex aspect-[4/5] items-end justify-center overflow-hidden bg-hero-bg md:aspect-[2.8/1] md:items-center md:justify-start">
+        <Image
+          src={newArrivalImage}
+          alt=""
+          fill
+          placeholder="blur"
+          sizes="(max-width: 1140px) 100vw, 1140px"
+          className="object-cover object-[center_top] md:object-[center_4%]"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/15 to-transparent md:bg-linear-to-r md:from-black/60 md:via-black/20 md:to-transparent" />
+        <div className="relative px-6 pb-8 text-center text-white md:px-12 md:pb-0 md:text-left">
           <h2 className="font-heading text-3xl font-bold leading-tight md:text-5xl">
             New Arrival
             <br />

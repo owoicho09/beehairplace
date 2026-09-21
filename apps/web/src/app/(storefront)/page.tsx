@@ -7,28 +7,20 @@ import {
   getBestSellers,
   getCategoryCards,
   getFeaturedProducts,
-  getNewArrival,
-  getStoreSettings,
 } from "@/lib/catalog/queries";
 
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [settings, categories, featured, newArrival, trending] =
-    await Promise.all([
-      getStoreSettings(),
-      getCategoryCards(),
-      getFeaturedProducts(),
-      getNewArrival(),
-      getBestSellers(),
-    ]);
+  const [categories, featured, trending] = await Promise.all([
+    getCategoryCards(),
+    getFeaturedProducts(),
+    getBestSellers(),
+  ]);
 
   return (
     <>
-      <HeroSection
-        videoUrl={settings?.heroMedia?.processedUrl ?? null}
-        posterUrl={settings?.heroMedia?.posterUrl ?? null}
-      />
+      <HeroSection />
       <WhyChooseUs />
       <CategoryCards categories={categories} />
       <ProductSection
@@ -39,7 +31,7 @@ export default async function HomePage() {
         href="/shop"
         linkLabel="View All"
       />
-      <NewArrivalBanner posterUrl={newArrival?.posterUrl ?? null} />
+      <NewArrivalBanner />
       <ProductSection
         title="Trending Now"
         products={trending}

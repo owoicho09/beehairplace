@@ -23,6 +23,7 @@
   --color-store-tint: #f4f4f4; /* neutral grey buttons ("Browse Shop") */
   --color-store-gold: #a68d6c; /* outline icons in the trust section */
   --color-store-footer: #05070b;
+  --color-hero-bg: #523f33; /* matches the studio backdrop in hero.jpg */
 }
 
 @theme inline {
@@ -45,6 +46,7 @@
   --color-store-tint: var(--color-store-tint);
   --color-store-gold: var(--color-store-gold);
   --color-store-footer: var(--color-store-footer);
+  --color-hero-bg: var(--color-hero-bg);
   --font-sans: var(--font-ui);
   --font-editorial: var(--font-editorial);
   --font-heading: var(--font-heading);
