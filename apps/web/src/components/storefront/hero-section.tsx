@@ -31,11 +31,12 @@ export function HeroSection() {
           Bee Hairplace
         </p>
         <h1 className="mt-3 max-w-2xl font-heading text-4xl font-bold leading-tight text-white md:max-w-lg md:text-5xl lg:max-w-xl lg:text-6xl lg:leading-[1.15]">
-          Human Hair Wigs, Bundles &amp; Closures
+          Luxury Wigs That Elevate Your Confidence
         </h1>
         <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/90 md:max-w-md md:text-base">
-          See every piece on video before you buy. Delivery across Abuja or
-          pickup in-store.
+          Discover premium human hair wigs crafted for beauty, comfort, and
+          effortless elegance. From sleek bone straight styles to glamorous
+          curls, find the perfect look for every occasion.
         </p>
         <Link
           href="/shop"

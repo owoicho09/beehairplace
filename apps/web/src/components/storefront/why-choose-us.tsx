@@ -1,17 +1,17 @@
 const REASONS = [
   {
-    title: "Real Videos of Every Piece",
-    body: "Watch each wig or bundle on video before you buy, so you know exactly what you're getting.",
+    title: "Premium Quality Hair",
+    body: "We source high quality human hair wigs that are soft, durable, and designed to maintain their beauty with proper care.",
     icon: (
       <>
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="m10 9.5 5 2.5-5 2.5v-5Z" />
+        <path d="M12 3 4 6v5c0 4.5 3.2 8.2 8 10 4.8-1.8 8-5.5 8-10V6l-8-3Z" />
+        <path d="m8.5 12 2.5 2.5 4.5-5" />
       </>
     ),
   },
   {
-    title: "Delivery or Pickup",
-    body: "Order online for delivery in Abuja, or collect your order in-store.",
+    title: "Fast & Reliable Delivery",
+    body: "Enjoy a seamless shopping experience with secure ordering, prompt processing, and reliable nationwide delivery.",
     icon: (
       <>
         <path d="M2 6h11v10H2zM13 9h4l3 3v4h-7" />
@@ -22,11 +22,11 @@ const REASONS = [
   },
   {
     title: "Wide Range of Styles",
-    body: "From bone straight to curls and bounce, in a range of textures and lengths.",
+    body: "From sleek bone straight wigs to voluminous curls and trendy bob cuts, we offer styles for every personality and occasion.",
     icon: (
       <>
-        <path d="M12 3 4 6v5c0 4.5 3.2 8.2 8 10 4.8-1.8 8-5.5 8-10V6l-8-3Z" />
-        <path d="m8.5 12 2.5 2.5 4.5-5" />
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m10 9.5 5 2.5-5 2.5v-5Z" />
       </>
     ),
   },

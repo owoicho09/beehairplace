@@ -118,7 +118,7 @@ export async function getFeaturedProducts() {
     const rows = await db.query.products.findMany({
       where: and(publishedProduct, eq(products.isFeatured, true)),
       orderBy: [asc(products.sortOrder)],
-      limit: 3,
+      limit: 4,
       with: {
         media: {
           where: (m, { and, eq, isNull }) =>
@@ -139,8 +139,8 @@ export async function getBestSellers() {
     const rows = await db.query.products.findMany({
       where: and(publishedProduct, eq(products.isBestSeller, true)),
       orderBy: [asc(products.sortOrder)],
-      // Matches the 3-up homepage row (alongside the 3 featured products).
-      limit: 3,
+      // Matches the 4-up homepage row (alongside the 4 featured products).
+      limit: 4,
       with: {
         media: {
           where: (m, { and, eq, isNull }) =>
